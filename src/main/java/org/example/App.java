@@ -3,7 +3,6 @@ package org.example;
 import org.example.dao.MovieDAO;
 import org.example.model.Movie;
 
-import java.util.Calendar;
 import java.sql.Date;
 
 public class App {
@@ -38,9 +37,11 @@ public class App {
 
         if (movie != null) {
             System.out.println("Title: " + movie.getTitle());
+        } else {
+            System.out.println("No movie found in database");
         }
 
-        // // Retrieving a all movies from database.
+        // // Retrieving all movies from database.
         for (Movie m : movieDAO.getAllMovies()) {
             System.out.println("Title: " + m.getTitle());
         }

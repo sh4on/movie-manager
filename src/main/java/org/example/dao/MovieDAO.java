@@ -46,7 +46,7 @@ public class MovieDAO {
                 preparedStatement.setString(1, movie.getTitle());
                 preparedStatement.setString(2, movie.getDirector());
                 preparedStatement.setString(3, movie.getGenre());
-                preparedStatement.setDate(4, (Date) movie.getReleaseYear());
+                preparedStatement.setDate(4, movie.getReleaseYear());
                 preparedStatement.setString(5, movie.getCountry());
                 preparedStatement.setString(6, movie.getCast());
 
@@ -114,7 +114,7 @@ public class MovieDAO {
                 preparedStatement.setString(1, movie.getTitle());
                 preparedStatement.setString(2, movie.getDirector());
                 preparedStatement.setString(3, movie.getGenre());
-                preparedStatement.setDate(4, (Date) movie.getReleaseYear());
+                preparedStatement.setDate(4, movie.getReleaseYear());
                 preparedStatement.setString(5, movie.getCountry());
                 preparedStatement.setString(6, movie.getCast());
                 preparedStatement.setInt(7, movie.getMovieID());
