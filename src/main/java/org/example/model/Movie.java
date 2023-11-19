@@ -3,7 +3,7 @@ package org.example.model;
 import java.sql.Date;
 
 public class Movie {
-    private int movieID;
+    private Long movieID;
     private String title;
     private String director;
     private String genre;
@@ -14,7 +14,7 @@ public class Movie {
     public Movie() {
     }
 
-    // Constructor without id field
+    // Constructor without 'movieID' field
     public Movie(String title, String director, String genre, Date releaseYear, String country, String cast) {
         this.title = title;
         this.director = director;
@@ -24,7 +24,7 @@ public class Movie {
         this.cast = cast;
     }
 
-    public Movie(int movieID, String title, String director, String genre, Date releaseYear, String country, String cast) {
+    public Movie(Long movieID, String title, String director, String genre, Date releaseYear, String country, String cast) {
         this.movieID = movieID;
         this.title = title;
         this.director = director;
@@ -34,11 +34,11 @@ public class Movie {
         this.cast = cast;
     }
 
-    public int getMovieID() {
+    public Long getMovieID() {
         return movieID;
     }
 
-    public void setMovieID(int movieID) {
+    public void setMovieID(Long movieID) {
         this.movieID = movieID;
     }
 
