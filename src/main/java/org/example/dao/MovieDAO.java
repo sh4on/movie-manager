@@ -8,6 +8,8 @@ import java.util.List;
 
 
 public class MovieDAO {
+
+    // Database connection details
     private final String DB_URL = "jdbc:mysql://localhost:3306/db_practice";
     private final String USER = "root";
     private final String PASSWORD = "root";
@@ -22,6 +24,9 @@ public class MovieDAO {
     public MovieDAO() {
     }
 
+
+    // This method establishes connection between our application and database
+    // And then returns the connection object.
     private Connection getConnection() {
         Connection connection = null;
 
@@ -36,6 +41,7 @@ public class MovieDAO {
         return connection;
     }
 
+    // Create
     public String addMovie(Movie movie) {
         String message = null;
 
@@ -43,12 +49,7 @@ public class MovieDAO {
             try (Connection connection = getConnection();
                  PreparedStatement preparedStatement = connection.prepareStatement(INSERT_MOVIE)) {
 
-                preparedStatement.setString(1, movie.getTitle());
-                preparedStatement.setString(2, movie.getDirector());
-                preparedStatement.setString(3, movie.getGenre());
-                preparedStatement.setDate(4, movie.getReleaseYear());
-                preparedStatement.setString(5, movie.getCountry());
-                preparedStatement.setString(6, movie.getCast());
+                setMovieParameters(preparedStatement, movie);
 
                 if (preparedStatement.executeUpdate() > 0) {
                     message = String.format("Movie (%s) saved successfully.", movie.getTitle());
@@ -64,14 +65,17 @@ public class MovieDAO {
         return message;
     }
 
-    public Movie getMovieById(int id) {
+    // Read
+    public Movie getMovieById(Long id) {
+        // Returns null if movie not found.
+
         Movie movie = null;
 
         try {
             try (Connection connection = getConnection();
                  PreparedStatement preparedStatement = connection.prepareStatement(SELECT_MOVIE_BY_ID)) {
 
-                preparedStatement.setInt(1, id);
+                preparedStatement.setLong(1, id);
                 ResultSet resultSet = preparedStatement.executeQuery();
 
                 if (resultSet.next()) {
@@ -85,6 +89,7 @@ public class MovieDAO {
         return movie;
     }
 
+    // Read all
     public List<Movie> getAllMovies() {
         List<Movie> movies = new ArrayList<>();
 
@@ -104,6 +109,7 @@ public class MovieDAO {
         return movies;
     }
 
+    // Update
     public String updateMovie(Movie movie) {
         String message = null;
 
@@ -111,13 +117,7 @@ public class MovieDAO {
             try (Connection connection = getConnection();
                  PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_MOVIE)) {
 
-                preparedStatement.setString(1, movie.getTitle());
-                preparedStatement.setString(2, movie.getDirector());
-                preparedStatement.setString(3, movie.getGenre());
-                preparedStatement.setDate(4, movie.getReleaseYear());
-                preparedStatement.setString(5, movie.getCountry());
-                preparedStatement.setString(6, movie.getCast());
-                preparedStatement.setInt(7, movie.getMovieID());
+                setMovieParameters(preparedStatement, movie);
 
                 if (preparedStatement.executeUpdate() > 0) {
                     message = String.format("Movie with ID %d updated successfully.", movie.getMovieID());
@@ -133,14 +133,15 @@ public class MovieDAO {
         return message;
     }
 
-    public String deleteMovieById(int id) {
+    // Delete
+    public String deleteMovieById(Long id) {
         String message = null;
 
         try {
             try (Connection connection = getConnection();
                  PreparedStatement preparedStatement = connection.prepareStatement(DELETE_MOVIE_BY_ID)) {
 
-                preparedStatement.setInt(1, id);
+                preparedStatement.setLong(1, id);
 
                 if (preparedStatement.executeUpdate() >= 0) {
                     message = String.format("Movie with ID %d deleted successfully.", id);
@@ -156,10 +157,23 @@ public class MovieDAO {
         return message;
     }
 
+    private void setMovieParameters(PreparedStatement preparedStatement, Movie movie) throws SQLException {
+        preparedStatement.setString(1, movie.getTitle());
+        preparedStatement.setString(2, movie.getDirector());
+        preparedStatement.setString(3, movie.getGenre());
+        preparedStatement.setDate(4, movie.getReleaseYear());
+        preparedStatement.setString(5, movie.getCountry());
+        preparedStatement.setString(6, movie.getCast());
+
+        if (movie.getMovieID() != null) {
+            preparedStatement.setLong(7, movie.getMovieID());
+        }
+    }
+
     private Movie createMovieObject(ResultSet resultSet) throws SQLException {
         Movie movie = new Movie();
 
-        int movieID = resultSet.getInt("movie_id");
+        Long movieID = resultSet.getLong("movie_id");
         String title = resultSet.getString("title");
         String director = resultSet.getString("director");
         String genre = resultSet.getString("genre");
